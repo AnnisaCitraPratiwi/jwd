@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Changer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        #colorBox {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border: 1px solid #000;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #000;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="colorBox">
+        <span id="colorName"></span>
+        <span id="colorHex"></span>
+    </div>
+    <input type="text" id="colorInput" placeholder="Enter color name or HEX code"><br>
+    <button id="toggleTextColorButton">Toggle Text Color</button>
+
+    <script src="script.js"></script>
+</html>
+                        
