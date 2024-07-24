@@ -20,6 +20,52 @@
         $jumlah = $_POST['jumlah'];
         $satuan = $_POST['satuan'];
 
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["foto_barang"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        // Check if image file is a actual image or fake image
+        if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["foto_barang"]["name"]);
+        if($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+            } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+            }
+        }
+
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+        
+        // Check file size
+        if ($_FILES["foto_barang"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+        
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+        
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["foto_barang"]["tmp_name"], $target_file)) {
+            // echo "The file ". htmlspecialchars( basename( $_FILES["foto_barang"]["name"])). " has been uploaded.";
+            } else {
+            echo "Sorry, there was an error uploading your file.";
+            }
+        }
         // Query untuk memeriksa apakah nama_barang sudah ada
         $checkQuery = "SELECT * FROM data_barang WHERE nama_barang = ?";
         
@@ -36,10 +82,10 @@
             } else {
                 // Nama barang belum ada dan panjang nik = 16, lanjutkan proses penyimpanan
                 if (strlen($nik) == 16 && ctype_digit($nik)) {
-                $insertBarangQuery = "INSERT INTO data_barang (kode_barang, nama_barang, jumlah, satuan, nik) VALUES (?, ?, ?, ?,?)";
+                $insertBarangQuery = "INSERT INTO data_barang (kode_barang, nama_barang, jumlah, satuan, nik, foto_barang) VALUES (?, ?, ?, ?,?,?)";
                 
                 if ($stmt = mysqli_prepare($conn, $insertBarangQuery)) {
-                    mysqli_stmt_bind_param($stmt, 'ssiss', $kode_barang, $nama_barang, $jumlah, $satuan,$nik);
+                    mysqli_stmt_bind_param($stmt, 'ssisss', $kode_barang, $nama_barang, $jumlah, $satuan,$nik,$target_file);
                     if (mysqli_stmt_execute($stmt)) {
                         echo "<script>alert('Data barang berhasil ditambahkan.');</script>";
                         echo "<script>window.location.href = 'create.php';</script>";
@@ -47,7 +93,6 @@
                         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
                         echo "<script>window.location.href = 'create.php';</script>";
                     }
-                    mysqli_stmt_close($stmt);
                 }
             }
             echo "<script>alert('Error: NIK tidak bisa mengandung huruf!');</script>";
@@ -56,6 +101,7 @@
             mysqli_stmt_close($stmt);
         }
     }
+
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +140,7 @@
                 <th scope="col" class="px-6 py-3">Nama Barang</th>
                 <th scope="col" class="px-6 py-3">Jumlah</th>
                 <th scope="col" class="px-6 py-3">Satuan</th>
+                <th scope="col" class="px-6 py-3">Foto Barang</th>
                 <th scope="col" class="px-6 py-3">Action</th>
             </tr>
         </thead>
@@ -106,13 +153,15 @@
             $nama_barang = $data['nama_barang'];
             $jumlah = $data['jumlah'];
             $satuan = $data['satuan'];
+            $foto_barang = $data['foto_barang'];
         ?>
             <tr>
                 <td scope="col" class="px-6 py-3"><?= $no++ ?></td>
-                <td scope="col" class="px-6 py-3"><?= htmlspecialchars($kode_barang) ?></td>
-                <td scope="col" class="px-6 py-3"><?= htmlspecialchars($nama_barang) ?></td>
-                <td scope="col" class="px-6 py-3"><?= htmlspecialchars($jumlah) ?></td>
-                <td scope="col" class="px-6 py-3"><?= htmlspecialchars($satuan) ?></td>
+                <td scope="col" class="px-6 py-3"><?= $kode_barang ?></td>
+                <td scope="col" class="px-6 py-3"><?= $nama_barang ?></td>
+                <td scope="col" class="px-6 py-3"><?= $jumlah ?></td>
+                <td scope="col" class="px-6 py-3"><?= $satuan ?></td>
+                <td scope="col" class="px-6 py-3"><?php echo "<img src='$foto_barang' width='100' height='100'" ?></td>
                 <td class="flex space-x-2">
                     <!-- tombol edit -->
                     <button data-modal-target="modalEdit<?= htmlspecialchars($kode_barang) ?>" data-modal-toggle="modalEdit<?= htmlspecialchars($kode_barang) ?>" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
@@ -231,7 +280,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <form action="create.php" method="POST">
+                <form action="create.php" method="POST" enctype="multipart/form-data">
                 <div class="space-y-4">
                     <label for="nama_barang" class="block text-sm font-medium text-gray-900 dark:text-white">Nama Barang:</label>
                     <input type="text" maxlength="11" id="nama_barang" name="nama_barang" class="form-control" placeholder="Masukkan Nama Barang" required>
@@ -244,6 +293,10 @@
                     
                     <label for="satuan" class="block text-sm font-medium text-gray-900 dark:text-white">Satuan:</label>
                     <input type="text" id="satuan" name="satuan" class="form-control" placeholder="Masukkan Satuan" required>
+
+                    <label for="foto_barang" class="block text-sm font-medium text-gray-900 dark:text-white">Foto Barang:</label>
+                    <input type="file" name="foto_barang" id="foto_barang" class="form-control" required>
+
                 </div>
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tambah</button>
@@ -275,7 +328,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <form id="myForm" action="update_stock.php" method="POST">
+                <form id="myForm" action="update_stock.php" method="POST" enctype="multipart/form-data">
                     <div class="space-y-4">
                         <label for="kode_barang" class="block text-sm font-medium text-gray-900 dark:text-white">Kode Barang:</label>
                         <input type="text" id="kode_barang" name="kode_barang" class="form-control" placeholder="Masukkan Kode Barang" required>
