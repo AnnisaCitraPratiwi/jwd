@@ -6,17 +6,19 @@
     <title>Contact Us</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body class="font-poppins bg-slate-500 px-10">
+  <body class="font-poppins bg-white-500 px-10">
     <section class="my-10px">
-      <h1 class="font-poppins mt-10 text-center text-3xl font-bold">
+      <h1
+        class="font-poppins mt-10 animate-flip-up text-center text-3xl font-bold animate-once animate-ease-in-out"
+      >
         「 ✦ Contact Us ✦ 」
       </h1>
       <nav class="mt-10">
         <ul class="list-inside list-disc text-left">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About LTS</a></li>
-          <li><a href="menu.html">Our Menu</a></li>
-          <li><a href="hours.html">Store Hours</a></li>
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="about.html" class="hover:underline">About LTS</a></li>
+          <li><a href="menu.html" class="hover:underline">Our Menu</a></li>
+          <li><a href="hours.html" class="hover:underline">Store Hours</a></li>
         </ul>
       </nav>
       <figure class="mt-10">
@@ -34,27 +36,27 @@
         <fieldset class="border border-gray-400 p-4">
           <legend class="mx-10 font-semibold">Send Us A Message</legend>
           <br />
-          <label for="name" class="mx-10 mt-1 block">Name :</label>
+          <label for="name" class="mx-1 block">Name :</label>
           <input
             type="text"
             name="name"
             id="name"
             placeholder="your name"
             required
-            class="mx-10 mt-1 w-full border border-gray-300 p-2"
+            class="mx-1 mt-1 w-full border border-gray-300 p-2"
           /><br /><br />
 
-          <label for="email" class="mx-10 mt-1 block">Email :</label>
+          <label for="email" class="mx-1 mt-1 block">Email :</label>
           <input
             type="email"
             name="email"
             id="email"
             placeholder="your email"
             required
-            class="mx-10 mt-1 w-full border border-gray-300 p-2"
+            class="mx-1 mt-1 w-full border border-gray-300 p-2"
           /><br /><br />
 
-          <label for="ymessage" class="mx-10 mt-1 block">Your Message :</label>
+          <label for="ymessage" class="mx-1 mt-1 block">Your Message :</label>
           <textarea
             name="ymessage"
             id="ymessage"
@@ -62,7 +64,7 @@
             rows="10"
             placeholder="your message here"
             required
-            class="mx-10 mt-1 w-full border border-gray-300 p-2"
+            class="mx-1 mt-1 w-full border border-gray-300 p-2"
           ></textarea
           ><br /><br />
         </fieldset>
@@ -70,7 +72,7 @@
           type="submit"
           class="mr-2 mt-4 bg-blue-500 px-4 py-2 text-white"
         >
-          Send |
+          Send
         </button>
         <button type="reset" class="mt-4 bg-gray-500 px-4 py-2 text-white">
           Reset
@@ -83,11 +85,13 @@
         555 Taco Temptation Lane, Suite T<br />
         Kansas City, MO 55555-5555<br /><br />
         Phone:
-        <a href="tel:+55555555555" class="text-blue-600">555-5555-5555</a>
+        <a href="tel:+55555555555" class="text-blue-600 underline"
+          >555-5555-5555</a
+        >
       </address>
       <br />
       <nav>
-        <a href="contact.html" class="text-blue-600">Back to Top</a>
+        <a href="contact.html" class="text-blue-600 underline">Back to Top</a>
       </nav>
     </section>
     <hr />
